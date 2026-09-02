@@ -18,7 +18,7 @@ GRIS_CLARO = "#D1D5DB"
 GRIS_OSCURO = "#6B7280"
 PALETA_CATEGORICA = [BLANCO, NARANJA, GRIS, NARANJA_CLARO, GRIS_CLARO, NARANJA_OSCURO, GRIS_OSCURO]
 PLANTILLA = "plotly_dark"
-ALTURA_CHICA = 260
+ALTURA_CHICA = 320
 
 st.markdown(
     """
@@ -93,30 +93,60 @@ for col in ["Saldo", "Saldo vencido", "Creditos activos", "Cuotas impagas", "Dí
         if col in ["Saldo", "Saldo vencido"]:
             tabla[col] = tabla[col].round(0).astype(int)
 
-st.title("Tablero de gestión crediticia — Masori")
+st.markdown(
+    """
+    <h1 style="text-align: center; margin-top: 2rem;">
+        Tablero de gestión crediticia — Masori
+    </h1>
+    """,
+    unsafe_allow_html=True,
+)
 
 tab_intro, tab_monitoreo, tab_tabla, tab_definiciones = st.tabs(
-    ["Introducción", "Monitoreo de cartera", "Tabla operativa", "Definiciones"]
+    ["Resumen general", "Monitoreo de cartera", "Tabla operativa", "Definiciones"]
 )
 
 with tab_intro:
-    st.header("Descripción")
+    st.header("Objetivo")
     st.markdown(
         """
-        **Masori** es una fintech prendaria que opera en Neuquén y Río Negro, como Proveedor No
-        Financiero de Crédito (PNFC) supervisado por el BCRA. Su cartera incluye créditos prendarios
-        (vehículos), créditos personales y descuento de cheques.
+        El presente tablero tiene como objetivo monitorear el desempeño de la cartera de créditos de
+        **Masori S.A.**, a través del seguimiento de indicadores clave de aprobación, cobranza y mora
+        que permiten evaluar la eficiencia operativa y el estado general de la cartera.
+
+        En la pestaña "Monitoreo de cartera" se presentan las tarjetas con los indicadores actuales,
+        junto con gráficos de concentración por línea de crédito, estado de los créditos, distribución
+        de mora, composición mensual de las cuotas y evolución de cobros frente al crédito otorgado.
+        En "Tabla operativa" se puede consultar el detalle por cliente, filtrable por estado y por
+        cuotas impagas.
         """
     )
-    st.header("Objetivo del tablero")
+
+    st.header("Origen de los datos")
     st.markdown(
         """
-        - Monitorear el estado general de la cartera crediticia.
-        - Visualizar la composición y evolución de las cuotas.
-        - Identificar concentración de riesgo y niveles de mora.
-        - Contar con una vista operativa filtrable por cliente.
+        Los datos provienen de cuatro exports del sistema de gestión de Masori:
+
+        - **Contacto:** datos de los clientes (localidad, saldo, saldo vencido, cantidad de créditos activos).
+        - **Crédito:** solicitudes de crédito (línea, monto, estado, usuario gestor).
+        - **Cuotas:** detalle de cada cuota del cronograma (capital, interés, cargo, impuesto, estado de mora).
+        - **Cobros:** pagos registrados sobre las cuotas.
         """
     )
+
+    st.header("Cartera de créditos")
+    cantidad_creditos = datos["estado_credito"]["cantidad"].sum()
+    saldo_a_cobrar = tabla["Saldo"].sum()
+    credito_promedio = kpis["total_otorgado"] / cantidad_creditos if cantidad_creditos else 0
+
+    st.markdown(
+        f"""
+        - **Créditos totales:** {cantidad_creditos:,.0f}
+        - **Saldo a cobrar:** {formato_ars(saldo_a_cobrar)}
+        - **Crédito promedio:** {formato_ars(credito_promedio)}
+        """.replace(",", ".")
+    )
+
     st.caption("Período de análisis: septiembre 2025 – septiembre 2026.")
 
 with tab_monitoreo:
@@ -130,8 +160,7 @@ with tab_monitoreo:
     k5.metric("Monto de cuotas (capital+interés)", formato_ars(kpis["monto_cuotas"]))
     k6.metric("Total cobrado", formato_ars(kpis["total_cobrado"]))
     k7.metric("Pendiente de cobro", formato_ars(kpis["monto_pendiente_cobro"]))
-    st.caption("Cobrado + Pendiente de cobro = Monto de cuotas. 'Otorgado' es el capital prestado, sin intereses — no se combina con los otros tres.")
-
+    
     st.divider()
 
     col1, col2, col3 = st.columns(3)
