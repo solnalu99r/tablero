@@ -58,7 +58,7 @@ st.markdown(
         border: 1px solid #F97316; border-radius: 6px;
     }
     label[data-testid="stWidgetLabel"] p { color: #F97316 !important; font-weight: 600; }
-    .block-container { padding-top: 0.8rem; padding-bottom: 0.5rem; }
+    .block-container { padding-top: 0.8rem; padding-bottom: 0.2rem; }
     div[data-testid="stVerticalBlock"] { gap: 0.2rem; }
     </style>
     """,
