@@ -125,7 +125,7 @@ st.markdown(
 )
 
 tab_intro, tab_monitoreo, tab_tabla, tab_definiciones = st.tabs(
-    ["Resumen general", "Monitoreo de cartera", "Tabla operativa", "Definiciones"]
+    ["Resumen general", "Monitoreo de cartera", "Tabla operativa", "Documentación"]
 )
 
 with tab_intro:
@@ -299,20 +299,63 @@ with tab_tabla:
     )
 
 with tab_definiciones:
+    st.header("Indicadores clave de performance")
+
+    indicadores = [
+        {
+            "nombre": "Tasa de aprobación",
+            "descripcion": "Refleja el porcentaje de solicitudes de crédito aprobadas en relación con el total de solicitudes resueltas en el período analizado.",
+            "objetivo": "Incrementar la aprobación de solicitudes viables, asegurando al mismo tiempo la calidad y sostenibilidad de la cartera crediticia.",
+            "calculo": "(Cantidad de créditos en Acreditado, Pagado, Refinanciado o Pre-cancelado / Cantidad de solicitudes resueltas, excluye Borrador) * 100.",
+            "frecuencia": "Mensual.",
+        },
+        {
+            "nombre": "Tasa de cobranza",
+            "descripcion": "Indica qué proporción del monto total de cuotas (capital, interés, cargo e impuesto) ya fue efectivamente cobrada.",
+            "objetivo": "Maximizar el cobro efectivo sobre lo facturado, para sostener la liquidez operativa de la cartera.",
+            "calculo": "(Monto cobrado en cobros Confirmado / Monto total de cuotas) * 100.",
+            "frecuencia": "Mensual.",
+        },
+        {
+            "nombre": "% de cartera en mora",
+            "descripcion": "Mide la proporción del saldo de cuotas que se encuentra en cualquier estado de mora, respecto del saldo total de cuotas.",
+            "objetivo": "Reducir la proporción de cartera en mora mediante estrategias proactivas de seguimiento y cobranza.",
+            "calculo": "(Saldo de cuotas en estados de mora distintos de Normal / Saldo total de cuotas) * 100.",
+            "frecuencia": "Mensual.",
+        },
+        {
+            "nombre": "Tasa de refinanciación",
+            "descripcion": "Expresa el porcentaje de créditos que debieron refinanciarse sobre el total de créditos otorgados.",
+            "objetivo": "Minimizar la necesidad de refinanciación, como señal de que las condiciones originales del crédito fueron sostenibles para el cliente.",
+            "calculo": "(Cantidad de créditos en estado Refinanciado / Cantidad total de créditos) * 100.",
+            "frecuencia": "Mensual.",
+        },
+    ]
+
+    fila1 = st.columns(2)
+    fila2 = st.columns(2)
+    posiciones = fila1 + fila2
+
+    for pos, ind in zip(posiciones, indicadores):
+        with pos:
+            with st.container(border=True):
+                st.markdown(f"**{ind['nombre']}**")
+                st.markdown(f"**Descripción:** {ind['descripcion']}")
+                st.markdown(f"**Objetivo organizacional:** {ind['objetivo']}")
+                st.markdown(f"**Cálculo:** {ind['calculo']}")
+                st.markdown(f"**Frecuencia:** {ind['frecuencia']}")
+
+    st.header("Fuente de datos y variables")
     st.markdown(
         """
-        **Fuente de datos:** planillas de gestión de Masori (Contacto, Crédito, Cuotas, Cobros),
-        anonimizadas antes de su publicación.
+        **Fuente de datos:** planillas de gestión de Masori (Contacto, Crédito, Cuotas, Cobros), anonimizadas antes de su publicación.
 
-        **Variables:**
+        **Variables de la tabla operativa:**
         - **Cliente:** identificador anonimizado del cliente (no es el nombre real).
         - **Estado del crédito:** Acreditado, Pagado, Refinanciado, Pre-cancelado, Borrador o Rechazado.
         - **Saldo:** capital pendiente de pago del cliente.
         - **Saldo vencido:** porción del saldo que ya venció sin pagarse.
         - **Cuotas impagas:** cantidad de cuotas vencidas sin pago registrado.
         - **Días de atraso (máx.):** mayor cantidad de días de atraso entre las cuotas impagas del cliente.
-        - **Tasa de aprobación:** % de solicitudes de crédito aprobadas sobre el total resuelto.
-        - **Cobrado / Otorgado:** % del monto total otorgado que ya fue efectivamente cobrado.
-        - **% de cartera en mora:** % del saldo de cuotas que no está en estado "Normal".
         """
     )
