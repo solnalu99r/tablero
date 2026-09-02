@@ -160,19 +160,17 @@ with tab_intro:
         """
     )
 
-
-
     st.caption("Período de análisis: septiembre 2025 – septiembre 2026.")
 
 with tab_monitoreo:
-    k1, k2, k3, k4, k5, k6 = st.columns([1, 1, 1, 1.5, 1.5, 1.5])  # POSICION: los 6 numeros son el ancho relativo de cada tarjeta; cambia los primeros 4 para achicar o agrandar
+    k1, k2, k3, k4, k5, k6 = st.columns([1, 1, 1, 1.5, 1.5, 1.5])
     k1.metric("Tasa de aprobación", f"{kpis['tasa_aprobacion_pct']:.1f}%")
     k2.metric("Tasa de cobranza", f"{kpis['tasa_cobranza_pct']:.1f}%")
     k3.metric("% de cartera en mora", f"{kpis['pct_en_mora']:.1f}%")
     k4.metric("Monto de cuotas", formato_ars(kpis["monto_cuotas"]))
     k5.metric("Total cobrado", formato_ars(kpis["total_cobrado"]))
     k6.metric("Pendiente de cobro", formato_ars(kpis["monto_pendiente_cobro"]))
-    
+
     #st.divider()
 
     col1, col2, col3 = st.columns(3)
@@ -254,7 +252,7 @@ with tab_monitoreo:
                     xaxis=dict(title="Monto", tickformat=",.0f"))
         st.plotly_chart(fig, width="stretch")
 
-        with col5:
+    with col5:
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=datos["cobros_vs_credito"]["Mes"], y=datos["cobros_vs_credito"]["Cobrado"],
                                   name="Cobrado (confirmado)", mode="lines+markers",
@@ -269,11 +267,10 @@ with tab_monitoreo:
                                   line=dict(width=2, color=GRIS, dash="dashdot"),
                                   hovertemplate="<b>Mes:</b> %{x|%b-%Y}<br><b>Programado:</b> %{y:,.0f}<extra></extra>"))
         tema_oscuro(fig, title=dict(text="Cobros confirmados vs. Crédito otorgado (con proyección)"),
-                    height=ALTURA_CHICA + 90,  # TAMAÑO: este grafico es mas alto que los demas (260+90=350px) porque tiene rangeslider abajo (la mini-linea de tiempo para hacer zoom)
+                    height=ALTURA_CHICA + 90,
                     xaxis=dict(title="Mes", rangeslider=dict(visible=True, thickness=0.08), type="date"),
                     yaxis=dict(title="Monto", tickformat=",.0f"))
         st.plotly_chart(fig, width="stretch")
-
 
 with tab_tabla:
     col1, col2 = st.columns(2)
