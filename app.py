@@ -134,18 +134,7 @@ with tab_intro:
         """
     )
 
-    st.header("Cartera de créditos")
-    cantidad_creditos = datos["estado_credito"]["cantidad"].sum()
-    saldo_a_cobrar = tabla["Saldo"].sum()
-    credito_promedio = kpis["total_otorgado"] / cantidad_creditos if cantidad_creditos else 0
 
-    st.markdown(
-        f"""
-        - **Créditos totales:** {cantidad_creditos:,.0f}
-        - **Saldo a cobrar:** {formato_ars(saldo_a_cobrar)}
-        - **Crédito promedio:** {formato_ars(credito_promedio)}
-        """.replace(",", ".")
-    )
 
     st.caption("Período de análisis: septiembre 2025 – septiembre 2026.")
 
