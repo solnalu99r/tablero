@@ -268,8 +268,8 @@ with tab_monitoreo:
                                   name="Cuotas programadas (proyección)", mode="lines",
                                   line=dict(width=2, color=GRIS, dash="dashdot"),
                                   hovertemplate="<b>Mes:</b> %{x|%b-%Y}<br><b>Programado:</b> %{y:,.0f}<extra></extra>"))
-                tema_oscuro(fig, title=dict(text="Cobros confirmados vs. Crédito otorgado (con proyección)"),
-                    height=400,  # tamaño fijo, independiente de ALTURA_CHICA
+        tema_oscuro(fig, title=dict(text="Cobros confirmados vs. Crédito otorgado (con proyección)"),
+                    height=ALTURA_CHICA + 90,  # TAMAÑO: este grafico es mas alto que los demas (260+90=350px) porque tiene rangeslider abajo (la mini-linea de tiempo para hacer zoom)
                     xaxis=dict(title="Mes", rangeslider=dict(visible=True, thickness=0.08), type="date"),
                     yaxis=dict(title="Monto", tickformat=",.0f"))
 with tab_tabla:
