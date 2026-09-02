@@ -61,7 +61,8 @@ st.markdown(
     label[data-testid="stWidgetLabel"] p { color: #F97316 !important; font-weight: 600; }
     .block-container { padding-top: 0.1rem; padding-bottom: 0.1rem; }
     div[data-testid="stVerticalBlock"] { gap: 0.1rem; }
-    h2 { margin-bottom: 0.1rem !important; }
+    h2 { margin-bottom: 0.2rem !important; margin-top: 0 !important; }
+    div[data-testid="stVerticalBlockBorderWrapper"] { margin-bottom: 0 !important; }
     </style>
     """,
     unsafe_allow_html=True,
