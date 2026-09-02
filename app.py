@@ -161,7 +161,7 @@ with tab_intro:
     st.caption("Período de análisis: septiembre 2025 – septiembre 2026.")
 
 with tab_monitoreo:
-    k1, k2, k3, k4, k5, k6 = st.columns(6)  # POSICION: 6 columnas de igual ancho (16,6% cada una), todos los indicadores en una sola fila
+    k1, k2, k3, k4, k5, k6 = st.columns([1, 1, 1, 1.5, 1.5, 1.5])  # POSICION: los 6 numeros son el ancho relativo de cada tarjeta; cambia los primeros 4 para achicar o agrandar
     k1.metric("Tasa de aprobación", f"{kpis['tasa_aprobacion_pct']:.1f}%")
     k2.metric("Tasa de cobranza", f"{kpis['tasa_cobranza_pct']:.1f}%")
     k3.metric("% de cartera en mora", f"{kpis['pct_en_mora']:.1f}%")
