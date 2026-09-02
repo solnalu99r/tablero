@@ -254,7 +254,7 @@ with tab_monitoreo:
                     xaxis=dict(title="Monto", tickformat=",.0f"))
         st.plotly_chart(fig, width="stretch")
 
-    with col5:
+        with col5:
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=datos["cobros_vs_credito"]["Mes"], y=datos["cobros_vs_credito"]["Cobrado"],
                                   name="Cobrado (confirmado)", mode="lines+markers",
@@ -272,6 +272,9 @@ with tab_monitoreo:
                     height=ALTURA_CHICA + 90,  # TAMAÑO: este grafico es mas alto que los demas (260+90=350px) porque tiene rangeslider abajo (la mini-linea de tiempo para hacer zoom)
                     xaxis=dict(title="Mes", rangeslider=dict(visible=True, thickness=0.08), type="date"),
                     yaxis=dict(title="Monto", tickformat=",.0f"))
+        st.plotly_chart(fig, width="stretch")
+
+
 with tab_tabla:
     col1, col2 = st.columns(2)
     with col1:
