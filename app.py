@@ -23,7 +23,7 @@ ALTURA_CHICA = 350
 st.markdown(
     """
     <style>
-    hr, div[data-testid="stDivider"] { border-color: #F97316 !important; }
+    hr, div[data-testid="stDivider"] { border-color: #F97316 !important; margin: 0.2rem 0 !important; }
     .stTabs [data-baseweb="tab-list"] {
         display: flex;
         width: 100%;
