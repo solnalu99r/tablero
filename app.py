@@ -59,7 +59,7 @@ st.markdown(
     }
     label[data-testid="stWidgetLabel"] p { color: #F97316 !important; font-weight: 600; }
     .block-container { padding-top: 0.95rem; padding-bottom: 0.05rem; }
-    div[data-testid="stVerticalBlock"] { gap: 0.05rem; }
+    div[data-testid="stVerticalBlock"] { gap: 0.1rem; }
     </style>
     """,
     unsafe_allow_html=True,
