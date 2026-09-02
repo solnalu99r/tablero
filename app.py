@@ -345,6 +345,7 @@ with tab_definiciones:
 
     st.header("Fuente de datos y variables")
     st.markdown(
+        """
         **Variables de la tabla operativa:**
         - **Cliente:** identificador anonimizado del cliente (no es el nombre real).
         - **Estado del crédito:** Acreditado, Pagado, Refinanciado, Pre-cancelado, Borrador o Rechazado.
