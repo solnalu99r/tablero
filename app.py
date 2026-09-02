@@ -36,8 +36,8 @@ st.markdown(
     .stTabs [data-baseweb="tab"] {
         flex: 1;
         justify-content: center;
-        font-size: 16px;
-        padding: 10px 0;
+        font-size: 18px;
+        padding: 14px 24px;
         border-radius: 4px;
         background-color: #1A1A1A;
     }
