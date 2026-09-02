@@ -303,7 +303,7 @@ with tab_tabla:
     )
 
 with tab_definiciones:
-    st.header("Indicadores clave de performance")
+    st.markdown('<h2 style="font-size:22px; margin-top:0; margin-bottom:0.2rem;">Indicadores clave de performance</h2>', unsafe_allow_html=True)
 
     indicadores = [
         {
@@ -347,7 +347,7 @@ with tab_definiciones:
                 st.markdown(f"**Descripción:** {ind['descripcion']}")
                 st.markdown(f"**Cálculo:** {ind['calculo']}")
 
-    st.header("Fuente de datos y variables")
+    st.markdown('<h2 style="font-size:22px; margin-top:0; margin-bottom:0.2rem;">Fuente de datos y variables</h2>', unsafe_allow_html=True)
     st.markdown(
         """
         **Variables de la tabla operativa:**
