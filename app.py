@@ -37,7 +37,7 @@ st.markdown(
         flex: 1;
         justify-content: center;
         font-size: 18px;
-        padding: 14px 24px;
+        padding: 14px 44px;
         border-radius: 4px;
         background-color: #1A1A1A;
     }
