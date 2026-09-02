@@ -49,7 +49,7 @@ st.markdown(
     .stTabs [data-baseweb="tab-border"] { display: none; }
     .stTabs [data-baseweb="tab-highlight"] { display: none; }
     div[data-testid="stMetric"] {
-        border: 1px solid #F97316; border-radius: 6px; padding: 6px 8px;
+        border: 1px solid #F97316; border-radius: 6px; padding: 3px 8px;
     }
     div[data-testid="stPlotlyChart"] {
         border: 1px solid #F97316; border-radius: 6px; padding: 4px;
@@ -58,7 +58,7 @@ st.markdown(
         border: 1px solid #F97316; border-radius: 6px;
     }
     label[data-testid="stWidgetLabel"] p { color: #F97316 !important; font-weight: 600; }
-    .block-container { padding-top: 0.95rem; padding-bottom: 0.05rem; }
+    .block-container { padding-top: 0.95rem; padding-bottom: 0.1 rem; }
     div[data-testid="stVerticalBlock"] { gap: 0.1rem; }
     </style>
     """,
