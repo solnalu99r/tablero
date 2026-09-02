@@ -305,30 +305,26 @@ with tab_definiciones:
         {
             "nombre": "Tasa de aprobación",
             "descripcion": "Refleja el porcentaje de solicitudes de crédito aprobadas en relación con el total de solicitudes resueltas en el período analizado.",
-            "objetivo": "Incrementar la aprobación de solicitudes viables, asegurando al mismo tiempo la calidad y sostenibilidad de la cartera crediticia.",
             "calculo": "(Cantidad de créditos en Acreditado, Pagado, Refinanciado o Pre-cancelado / Cantidad de solicitudes resueltas, excluye Borrador) * 100.",
-            "frecuencia": "Mensual.",
+            
         },
         {
             "nombre": "Tasa de cobranza",
             "descripcion": "Indica qué proporción del monto total de cuotas (capital, interés, cargo e impuesto) ya fue efectivamente cobrada.",
-            "objetivo": "Maximizar el cobro efectivo sobre lo facturado, para sostener la liquidez operativa de la cartera.",
             "calculo": "(Monto cobrado en cobros Confirmado / Monto total de cuotas) * 100.",
-            "frecuencia": "Mensual.",
+            
         },
         {
             "nombre": "% de cartera en mora",
             "descripcion": "Mide la proporción del saldo de cuotas que se encuentra en cualquier estado de mora, respecto del saldo total de cuotas.",
-            "objetivo": "Reducir la proporción de cartera en mora mediante estrategias proactivas de seguimiento y cobranza.",
             "calculo": "(Saldo de cuotas en estados de mora distintos de Normal / Saldo total de cuotas) * 100.",
-            "frecuencia": "Mensual.",
+            
         },
         {
             "nombre": "Tasa de refinanciación",
             "descripcion": "Expresa el porcentaje de créditos que debieron refinanciarse sobre el total de créditos otorgados.",
-            "objetivo": "Minimizar la necesidad de refinanciación, como señal de que las condiciones originales del crédito fueron sostenibles para el cliente.",
             "calculo": "(Cantidad de créditos en estado Refinanciado / Cantidad total de créditos) * 100.",
-            "frecuencia": "Mensual.",
+           
         },
     ]
 
