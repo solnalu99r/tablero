@@ -20,9 +20,6 @@ PALETA_CATEGORICA = [BLANCO, NARANJA, GRIS, NARANJA_CLARO, GRIS_CLARO, NARANJA_O
 PLANTILLA = "plotly_dark"
 ALTURA_CHICA = 350
 
-    div[data-testid="stVerticalBlock"] { gap: 0.5rem; }
-    h2 { margin-bottom: 0.2rem !important; }
-    </style>
 
 st.markdown(
     """
@@ -62,8 +59,9 @@ st.markdown(
         border: 1px solid #F97316; border-radius: 6px;
     }
     label[data-testid="stWidgetLabel"] p { color: #F97316 !important; font-weight: 600; }
-    .block-container { padding-top: 0.95rem; padding-bottom: 0.1 rem; }
-    div[data-testid="stVerticalBlock"] { gap: 0.1rem; }
+    .block-container { padding-top: 0.8rem; padding-bottom: 0.5rem; }
+    div[data-testid="stVerticalBlock"] { gap: 0.5rem; }
+    h2 { margin-bottom: 0.2rem !important; }
     </style>
     """,
     unsafe_allow_html=True,
