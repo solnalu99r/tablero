@@ -83,7 +83,7 @@ def tema_oscuro(fig, **kwargs):
     legend_final.update(legend_kwargs)
     titulo_kwargs = kwargs.pop("title", None)
     if titulo_kwargs is not None and isinstance(titulo_kwargs, dict) and "x" not in titulo_kwargs:
-        titulo_kwargs["x"] = 0.5
+        titulo_kwargs["x"] = 0.02
     fig.update_layout(
         template=PLANTILLA, plot_bgcolor=FONDO, paper_bgcolor=FONDO,
         font=dict(color=BLANCO, family="Arial", size=11), title_font=dict(color=BLANCO, family="Arial", size=14),
