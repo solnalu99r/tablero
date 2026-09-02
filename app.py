@@ -24,8 +24,30 @@ st.markdown(
     """
     <style>
     hr, div[data-testid="stDivider"] { border-color: #F97316 !important; }
-    .stTabs [aria-selected="true"] { color: #F97316 !important; }
-    .stTabs [data-baseweb="tab-border"] { background-color: #F97316 !important; }
+    .stTabs [data-baseweb="tab-list"] {
+        display: flex;
+        width: 100%;
+        gap: 4px;
+        background-color: #000000;
+        border: 1px solid #F97316;
+        border-radius: 6px;
+        padding: 4px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        flex: 1;
+        justify-content: center;
+        font-size: 16px;
+        padding: 10px 0;
+        border-radius: 4px;
+        background-color: #1A1A1A;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #F97316 !important;
+        color: #000000 !important;
+        font-weight: 700;
+    }
+    .stTabs [data-baseweb="tab-border"] { display: none; }
+    .stTabs [data-baseweb="tab-highlight"] { display: none; }
     div[data-testid="stMetric"] {
         border: 1px solid #F97316; border-radius: 6px; padding: 6px 8px;
     }
