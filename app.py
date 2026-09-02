@@ -49,7 +49,7 @@ st.markdown(
     .stTabs [data-baseweb="tab-border"] { display: none; }
     .stTabs [data-baseweb="tab-highlight"] { display: none; }
     div[data-testid="stMetric"] {
-        border: 1px solid #F97316; border-radius: 6px; padding: 2px 8px;
+        border: 1px solid #F97316; border-radius: 6px; padding: 4px 8px;
     }
     div[data-testid="stPlotlyChart"] {
         border: 1px solid #F97316; border-radius: 6px; padding: 4px;
