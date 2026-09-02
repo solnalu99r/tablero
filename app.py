@@ -345,9 +345,6 @@ with tab_definiciones:
 
     st.header("Fuente de datos y variables")
     st.markdown(
-        """
-        **Fuente de datos:** planillas de gestión de Masori (Contacto, Crédito, Cuotas, Cobros), anonimizadas antes de su publicación.
-
         **Variables de la tabla operativa:**
         - **Cliente:** identificador anonimizado del cliente (no es el nombre real).
         - **Estado del crédito:** Acreditado, Pagado, Refinanciado, Pre-cancelado, Borrador o Rechazado.
