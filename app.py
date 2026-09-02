@@ -62,6 +62,7 @@ st.markdown(
     .block-container { padding-top: 0.1rem; padding-bottom: 0.1rem; }
     div[data-testid="stVerticalBlock"] { gap: 0.1rem; }
     h2 { margin-bottom: 0.0rem !important; margin-top: 0 !important; }
+    .stTabs [data-baseweb="tab-panel"] { padding-top: 0 !important; }
     div[data-testid="stVerticalBlockBorderWrapper"] { margin-bottom: 0 !important; }
     </style>
     """,
