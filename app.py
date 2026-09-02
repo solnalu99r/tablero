@@ -267,7 +267,7 @@ with tab_monitoreo:
                                   line=dict(width=2, color=GRIS, dash="dashdot"),
                                   hovertemplate="<b>Mes:</b> %{x|%b-%Y}<br><b>Programado:</b> %{y:,.0f}<extra></extra>"))
         tema_oscuro(fig, title=dict(text="Cobros confirmados vs. Crédito otorgado (con proyección)"),
-                    height=ALTURA_CHICA + 90,
+                    height=ALTURA_CHICA,
                     xaxis=dict(title="Mes", rangeslider=dict(visible=True, thickness=0.08), type="date"),
                     yaxis=dict(title="Monto", tickformat=",.0f"))
         st.plotly_chart(fig, width="stretch")
