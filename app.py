@@ -20,6 +20,10 @@ PALETA_CATEGORICA = [BLANCO, NARANJA, GRIS, NARANJA_CLARO, GRIS_CLARO, NARANJA_O
 PLANTILLA = "plotly_dark"
 ALTURA_CHICA = 350
 
+    div[data-testid="stVerticalBlock"] { gap: 0.5rem; }
+    h2 { margin-bottom: 0.2rem !important; }
+    </style>
+
 st.markdown(
     """
     <style>
