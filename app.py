@@ -169,7 +169,7 @@ with tab_monitoreo:
     k5.metric("Total cobrado", formato_ars(kpis["total_cobrado"]))
     k6.metric("Pendiente de cobro", formato_ars(kpis["monto_pendiente_cobro"]))
     
-    st.divider()
+    #st.divider()
 
     col1, col2, col3 = st.columns(3)
 
