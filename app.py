@@ -161,16 +161,13 @@ with tab_intro:
     st.caption("Período de análisis: septiembre 2025 – septiembre 2026.")
 
 with tab_monitoreo:
-    k1, k2, k3 = st.columns(3)
+    k1, k2, k3, k4, k5, k6 = st.columns(6)  # POSICION: 6 columnas de igual ancho (16,6% cada una), todos los indicadores en una sola fila
     k1.metric("Tasa de aprobación", f"{kpis['tasa_aprobacion_pct']:.1f}%")
     k2.metric("Tasa de cobranza", f"{kpis['tasa_cobranza_pct']:.1f}%")
     k3.metric("% de cartera en mora", f"{kpis['pct_en_mora']:.1f}%")
-
-    k4, k5, k6, k7 = st.columns(4)
-    k4.metric("Total otorgado (capital)", formato_ars(kpis["total_otorgado"]))
-    k5.metric("Monto de cuotas (capital+interés)", formato_ars(kpis["monto_cuotas"]))
-    k6.metric("Total cobrado", formato_ars(kpis["total_cobrado"]))
-    k7.metric("Pendiente de cobro", formato_ars(kpis["monto_pendiente_cobro"]))
+    k4.metric("Monto de cuotas", formato_ars(kpis["monto_cuotas"]))
+    k5.metric("Total cobrado", formato_ars(kpis["total_cobrado"]))
+    k6.metric("Pendiente de cobro", formato_ars(kpis["monto_pendiente_cobro"]))
     
     st.divider()
 
