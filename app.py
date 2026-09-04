@@ -53,25 +53,21 @@ st.markdown(
     .stTabs [data-baseweb="tab-highlight"] {{ display: none; }}
     div[data-testid="stMetric"] {{
         background-color: {FONDO_PANEL};
-        border: 1px solid #F97316; border-radius: 0px; padding: 6px 8px;
+        border: 1px solid #F97316; border-radius: 6px; padding: 6px 8px;
     }}
     div[data-testid="stPlotlyChart"] {{
         background-color: {FONDO_PANEL};
-        border: 1px solid #F97316; border-radius: 0px; padding: 1px;
+        border: 1px solid #F97316; border-radius: 6px; padding: 1px;
     }}
     div[data-testid="stDataFrame"] {{
-        border: 1px solid #F97316; border-radius: 0px;
+        border: 1px solid #F97316; border-radius: 6px;
     }}
     label[data-testid="stWidgetLabel"] p {{ color: #F97316 !important; font-weight: 600; }}
     .block-container {{ padding-top: 0.1rem; padding-bottom: 0.1rem; }}
 
-    /* --- Grilla tipo mosaico: paneles pegados, sin huecos entre filas/columnas --- */
-    div[data-testid="stVerticalBlock"] {{ gap: 0rem; }}
-    div[data-testid="stHorizontalBlock"] {{ gap: 0rem; }}
-    div[data-testid="column"] {{ padding: 0px !important; }}
-    div[data-testid="stMetric"], div[data-testid="stPlotlyChart"] {{
-        margin: -1px 0 0 -1px;
-    }}
+    /* --- Grilla tipo mosaico: columnas de gráficos pegadas, sin pisarse --- */
+    div[data-testid="stVerticalBlock"] {{ gap: 0.1rem; }}
+    div[data-testid="stHorizontalBlock"] {{ gap: 0.3rem; }}
 
     h2 {{ margin-bottom: 0.0rem !important; margin-top: 0 !important; }}
     .stTabs [data-baseweb="tab-panel"] {{ padding-top: 0 !important; }}
