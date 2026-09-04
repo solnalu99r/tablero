@@ -3,11 +3,12 @@ import plotly.graph_objects as go
 import streamlit as st
 
 
-# Configuración de página y paleta (negro/blanco/gris/naranja)
+# Configuración de página y paleta (gris oscuro/blanco/naranja)
 
 st.set_page_config(page_title="Tablero de gestión crediticia - Masori", layout="wide")
 
-FONDO = "#0D0D0D"
+FONDO = "#22262B"
+FONDO_PANEL = "#22262B"
 NEGRO = "#000000"
 BLANCO = "#FFFFFF"
 NARANJA = "#F97316"
@@ -22,10 +23,11 @@ ALTURA_CHICA = 250
 
 
 st.markdown(
-    """
+    f"""
     <style>
-        hr, div[data-testid="stDivider"] { border-color: #F97316 !important; }
-    .stTabs [data-baseweb="tab-list"] {
+    .stApp {{ background-color: {FONDO}; }}
+        hr, div[data-testid="stDivider"] {{ border-color: #F97316 !important; }}
+    .stTabs [data-baseweb="tab-list"] {{
         display: flex;
         width: 100%;
         gap: 4px;
@@ -33,37 +35,47 @@ st.markdown(
         border: 1px solid #F97316;
         border-radius: 6px;
         padding: 4px;
-    }
-    .stTabs [data-baseweb="tab"] {
+    }}
+    .stTabs [data-baseweb="tab"] {{
         flex: 1;
         justify-content: center;
         font-size: 18px;
         padding: 14px 44px;
         border-radius: 4px;
-        background-color: #1A1A1A;
-    }
-    .stTabs [aria-selected="true"] {
+        background-color: #1A1D21;
+    }}
+    .stTabs [aria-selected="true"] {{
         background-color: #F97316 !important;
         color: #000000 !important;
         font-weight: 700;
-    }
-    .stTabs [data-baseweb="tab-border"] { display: none; }
-    .stTabs [data-baseweb="tab-highlight"] { display: none; }
-          div[data-testid="stMetric"] {
-        border: 1px solid #F97316; border-radius: 6px; padding: 6px 8px;
-    }
-    div[data-testid="stPlotlyChart"] {
-        border: 1px solid #F97316; border-radius: 6px; padding: 1px;
-    }
-    div[data-testid="stDataFrame"] {
-        border: 1px solid #F97316; border-radius: 6px;
-    }
-    label[data-testid="stWidgetLabel"] p { color: #F97316 !important; font-weight: 600; }
-    .block-container { padding-top: 0.1rem; padding-bottom: 0.1rem; }
-    div[data-testid="stVerticalBlock"] { gap: 0.1rem; }
-    h2 { margin-bottom: 0.0rem !important; margin-top: 0 !important; }
-    .stTabs [data-baseweb="tab-panel"] { padding-top: 0 !important; }
-    div[data-testid="stVerticalBlockBorderWrapper"] { margin-bottom: 0 !important; }
+    }}
+    .stTabs [data-baseweb="tab-border"] {{ display: none; }}
+    .stTabs [data-baseweb="tab-highlight"] {{ display: none; }}
+    div[data-testid="stMetric"] {{
+        background-color: {FONDO_PANEL};
+        border: 1px solid #F97316; border-radius: 0px; padding: 6px 8px;
+    }}
+    div[data-testid="stPlotlyChart"] {{
+        background-color: {FONDO_PANEL};
+        border: 1px solid #F97316; border-radius: 0px; padding: 1px;
+    }}
+    div[data-testid="stDataFrame"] {{
+        border: 1px solid #F97316; border-radius: 0px;
+    }}
+    label[data-testid="stWidgetLabel"] p {{ color: #F97316 !important; font-weight: 600; }}
+    .block-container {{ padding-top: 0.1rem; padding-bottom: 0.1rem; }}
+
+    /* --- Grilla tipo mosaico: paneles pegados, sin huecos entre filas/columnas --- */
+    div[data-testid="stVerticalBlock"] {{ gap: 0rem; }}
+    div[data-testid="stHorizontalBlock"] {{ gap: 0rem; }}
+    div[data-testid="column"] {{ padding: 0px !important; }}
+    div[data-testid="stMetric"], div[data-testid="stPlotlyChart"] {{
+        margin: -1px 0 0 -1px;
+    }}
+
+    h2 {{ margin-bottom: 0.0rem !important; margin-top: 0 !important; }}
+    .stTabs [data-baseweb="tab-panel"] {{ padding-top: 0 !important; }}
+    div[data-testid="stVerticalBlockBorderWrapper"] {{ margin-bottom: 0 !important; }}
     </style>
     """,
     unsafe_allow_html=True,
@@ -90,8 +102,8 @@ def tema_oscuro(fig, **kwargs):
         legend=legend_final, separators=",.", margin=dict(l=40, r=20, t=40, b=30),
         **({"title": titulo_kwargs} if titulo_kwargs is not None else {}), **kwargs,
     )
-    fig.update_xaxes(gridcolor="#2B2B2B", zerolinecolor="#2B2B2B", color=BLANCO)
-    fig.update_yaxes(gridcolor="#2B2B2B", zerolinecolor="#2B2B2B", color=BLANCO)
+    fig.update_xaxes(gridcolor="#3A3F45", zerolinecolor="#3A3F45", color=BLANCO)
+    fig.update_yaxes(gridcolor="#3A3F45", zerolinecolor="#3A3F45", color=BLANCO)
     return fig
 
 
