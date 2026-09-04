@@ -103,9 +103,6 @@ def cargar_datos():
     d["cuotas_detalle"] = pd.read_csv("data/cuotas_detalle.csv", parse_dates=["Fecha de vencimiento"])
     d["cobros_detalle"] = pd.read_csv("data/cobros_detalle.csv", parse_dates=["Fecha de cobro"])
     d["tabla"] = pd.read_csv("data/tabla_clientes.csv")
-    d["composicion"] = pd.read_csv("data/composicion_cuota.csv", parse_dates=["Mes"])
-    d["cobros_vs_credito"] = pd.read_csv("data/cobros_vs_credito.csv", parse_dates=["Mes"])
-    d["proyeccion"] = pd.read_csv("data/proyeccion_cuotas.csv", parse_dates=["Mes"])
     d["evolucion_credito"] = pd.read_csv("data/evolucion_credito.csv", parse_dates=["Mes"])
     d["horizonte_2029"] = pd.read_csv("data/horizonte_2029.csv", parse_dates=["Mes"])
     return d
@@ -143,10 +140,9 @@ with tab_intro:
 
         En la pestaña "Monitoreo de cartera" se presentan las tarjetas con los indicadores actuales,
         junto con gráficos de concentración por línea de crédito, estado de los créditos, distribución
-        de mora, composición mensual de las cuotas y evolución de cobros frente al crédito otorgado.
-        Todos los gráficos y tarjetas responden al rango de fechas seleccionado arriba a la derecha.
-        En "Tabla operativa" se puede consultar el detalle por cliente, filtrable por estado y por
-        cuotas impagas.
+        de mora, composición de la cuota y otorgamiento frente al horizonte de vencimientos. Todos los
+        gráficos y tarjetas responden al rango de fechas seleccionado arriba a la derecha. En "Tabla
+        operativa" se puede consultar el detalle por cliente, filtrable por estado y por cuotas impagas.
         """
     )
 
@@ -274,106 +270,96 @@ with tab_monitoreo:
     col4, col5 = st.columns(2)
 
     with col4:
-        colores_comp = {"Capital": BLANCO, "Interés": NARANJA, "Cargo": GRIS, "Impuesto": NARANJA_CLARO}
-        comp = datos["composicion"][
-            (datos["composicion"]["Mes"] >= fecha_desde) & (datos["composicion"]["Mes"] <= fecha_hasta)
-        ].copy()
-        totales_mes = comp[["Capital", "Interés", "Cargo", "Impuesto"]].sum(axis=1)
-        porcentuales = comp[["Capital", "Interés", "Cargo", "Impuesto"]].div(totales_mes.replace(0, pd.NA), axis=0).fillna(0) * 100
-        UMBRAL = 5
+        comp_total = cuotas_f[["Capital", "Interés", "Cargo", "Impuesto"]].sum()
+        total_facturado = comp_total.sum()
 
-        def etiquetas(col):
-            p = porcentuales[col].values
-            return [f"{v:.0f}%" if v >= UMBRAL else "" for v in p]
+        etiquetas_comp = ["Capital", "+ Interés", "+ Cargo", "+ Impuesto", "Total facturado"]
+        valores_comp = [comp_total["Capital"], comp_total["Interés"], comp_total["Cargo"], comp_total["Impuesto"], total_facturado]
+        colores_comp_barras = [GRIS_CLARO, NARANJA, GRIS_OSCURO, NARANJA_CLARO, BLANCO]
+        bases_comp = [0, comp_total["Capital"], comp_total["Capital"] + comp_total["Interés"],
+                      comp_total["Capital"] + comp_total["Interés"] + comp_total["Cargo"], 0]
 
-        MESES_ES = {1: "Ene", 2: "Feb", 3: "Mar", 4: "Abr", 5: "May", 6: "Jun",
-                    7: "Jul", 8: "Ago", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dic"}
-        etiquetas_mes = [f"{MESES_ES[m.month]}-{str(m.year)[2:]}" for m in comp["Mes"]]
-
-        fig = go.Figure(data=[
-            go.Bar(name=c, x=comp[c], y=comp["Mes"], orientation="h",
-                   text=etiquetas(c), textposition="inside", insidetextanchor="middle",
-                   marker_color=colores_comp[c],
-                   hovertemplate=f"<b>{c}</b>: " + "%{x:,.0f}<extra></extra>")
-            for c in ["Capital", "Interés", "Cargo", "Impuesto"]
-        ])
-        tema_oscuro(fig, barmode="stack", title=dict(text="Composición mensual del cronograma de cuotas"),
-                    height=ALTURA_CHICA,
-                    yaxis=dict(title="Mes", type="category", tickmode="array",
-                               tickvals=list(comp["Mes"]), ticktext=etiquetas_mes, autorange="reversed"),
-                    xaxis=dict(title="Monto", tickformat=",.0f"))
+        fig = go.Figure(go.Bar(
+            x=etiquetas_comp, y=valores_comp, base=bases_comp,
+            marker=dict(color=colores_comp_barras, opacity=0.75, line=dict(width=0)),
+            hovertemplate="%{x}: " + "%{y:,.0f}<extra></extra>",
+        ))
+        tema_oscuro(fig, height=260,
+            title=dict(text="Composición de cuota: de Capital a Total"),
+            yaxis=dict(title="Monto", tickformat=",.0f"),
+            showlegend=False,
+        )
         st.plotly_chart(fig, width="stretch")
 
     with col5:
-        cvc = datos["cobros_vs_credito"][
-            (datos["cobros_vs_credito"]["Mes"] >= fecha_desde) & (datos["cobros_vs_credito"]["Mes"] <= fecha_hasta)
-        ]
-        proy = datos["proyeccion"][
-            (datos["proyeccion"]["Mes"] >= fecha_desde) & (datos["proyeccion"]["Mes"] <= fecha_hasta)
-        ]
+        def hex_a_rgba(color_hex, alpha):
+            color_hex = color_hex.lstrip("#")
+            r, g, b = int(color_hex[0:2], 16), int(color_hex[2:4], 16), int(color_hex[4:6], 16)
+            return f"rgba({r},{g},{b},{alpha})"
+
+        NEON_CALIDO = ["#FF4500", "#E63946", "#FF7F50", "#FF9E00"]
+        NEON_FRIO   = ["#00E5FF", "#FFFFFF", "#D1D5DB", "#6B7280"]
+
+        evolucion_wide = datos["evolucion_credito"].pivot(index="Mes", columns="Linea de crédito", values="Monto").fillna(0)
+        horizonte_wide = datos["horizonte_2029"].pivot(index="Mes", columns="Linea de crédito", values="Monto").fillna(0)
+        evolucion_wide = evolucion_wide[(evolucion_wide.index >= fecha_desde) & (evolucion_wide.index <= fecha_hasta)]
+        horizonte_wide = horizonte_wide[(horizonte_wide.index >= fecha_desde) & (horizonte_wide.index <= fecha_hasta)]
+
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=cvc["Mes"], y=cvc["Cobrado"],
-                                  name="Cobrado (confirmado)", mode="lines+markers",
-                                  line=dict(width=2, color=NARANJA, dash="dash"), marker=dict(size=6, color=NARANJA),
-                                  hovertemplate="<b>Mes:</b> %{x|%b-%Y}<br><b>Cobrado:</b> %{y:,.0f}<extra></extra>"))
-        fig.add_trace(go.Scatter(x=cvc["Mes"], y=cvc["Credito_otorgado"],
-                                  name="Crédito otorgado", mode="lines+markers",
-                                  line=dict(width=2, color=BLANCO, dash="dot"), marker=dict(size=6, color=BLANCO),
-                                  hovertemplate="<b>Mes:</b> %{x|%b-%Y}<br><b>Crédito otorgado:</b> %{y:,.0f}<extra></extra>"))
-        fig.add_trace(go.Scatter(x=proy["Mes"], y=proy["Monto_programado"],
-                                  name="Cuotas programadas (proyección)", mode="lines",
-                                  line=dict(width=2, color=GRIS, dash="dashdot"),
-                                  hovertemplate="<b>Mes:</b> %{x|%b-%Y}<br><b>Programado:</b> %{y:,.0f}<extra></extra>"))
-        tema_oscuro(fig, title=dict(text="Cobros confirmados vs. Crédito otorgado (con proyección)"),
-                    height=ALTURA_CHICA,
-                    xaxis=dict(title="Mes", rangeslider=dict(visible=True, thickness=0.08), type="date"),
-                    yaxis=dict(title="Monto", tickformat=",.0f"))
+
+        def agregar_serie(x, y, color, stackgroup):
+            fig.add_trace(go.Scatter(
+                x=x, y=y, mode="lines", stackgroup=stackgroup, showlegend=False,
+                line=dict(width=2, color=color), fillcolor=hex_a_rgba(color, 0.35),
+                hovertemplate="%{x|%b-%Y}: %{y:,.0f}<extra></extra>",
+            ))
+
+        colores_otorgado = {}
+        for i, linea in enumerate(evolucion_wide.columns):
+            color = NEON_CALIDO[i % len(NEON_CALIDO)]
+            colores_otorgado[linea] = color
+            agregar_serie(evolucion_wide.index, evolucion_wide[linea], color, "otorgado")
+
+        colores_vencimiento = {}
+        for i, linea in enumerate(horizonte_wide.columns):
+            color = NEON_FRIO[i % len(NEON_FRIO)]
+            colores_vencimiento[linea] = color
+            agregar_serie(horizonte_wide.index, horizonte_wide[linea], color, "vencimientos")
+
+        fecha_corte = evolucion_wide.index.max() if len(evolucion_wide) else fecha_hasta
+        fig.add_shape(
+            type="line", xref="x", yref="paper",
+            x0=fecha_corte, x1=fecha_corte, y0=0, y1=1,
+            line=dict(color=BLANCO, dash="dash"),
+        )
+
+        tema_oscuro(fig, height=260,
+            title=dict(text="Otorgamiento vs. horizonte de vencimientos"),
+            xaxis=dict(title="Mes", tickformat="%b-%Y"),
+            yaxis=dict(title="Monto", tickformat=",.0f"),
+            showlegend=False,
+        )
         st.plotly_chart(fig, width="stretch")
 
-    st.markdown("##### Otorgamiento mensual vs. horizonte de vencimientos, por línea de crédito")
+        filas_tabla = max(len(colores_vencimiento), len(colores_otorgado))
+        items_venc = list(colores_vencimiento.items())
+        items_otor = list(colores_otorgado.items())
 
-    def hex_a_rgba(color_hex, alpha):
-        color_hex = color_hex.lstrip("#")
-        r, g, b = int(color_hex[0:2], 16), int(color_hex[2:4], 16), int(color_hex[4:6], 16)
-        return f"rgba({r},{g},{b},{alpha})"
+        filas_html = ""
+        for i in range(filas_tabla):
+            venc = f'<span style="color:{items_venc[i][1]}">⬤</span> {items_venc[i][0]}' if i < len(items_venc) else ""
+            otor = f'<span style="color:{items_otor[i][1]}">⬤</span> {items_otor[i][0]}' if i < len(items_otor) else ""
+            filas_html += f"<tr><td style='padding:2px 8px;'>{venc}</td><td style='padding:2px 8px;'>{otor}</td></tr>"
 
-    NEON_CALIDO = ["#FF4500", "#E63946", "#FF7F50", "#FF9E00"]
-    NEON_FRIO   = ["#00E5FF", "#FFFFFF", "#D1D5DB", "#6B7280"]
-
-    evolucion_wide = datos["evolucion_credito"].pivot(index="Mes", columns="Linea de crédito", values="Monto").fillna(0)
-    horizonte_wide = datos["horizonte_2029"].pivot(index="Mes", columns="Linea de crédito", values="Monto").fillna(0)
-    evolucion_wide = evolucion_wide[(evolucion_wide.index >= fecha_desde) & (evolucion_wide.index <= fecha_hasta)]
-    horizonte_wide = horizonte_wide[(horizonte_wide.index >= fecha_desde) & (horizonte_wide.index <= fecha_hasta)]
-
-    fig = go.Figure()
-
-    def agregar_serie(x, y, nombre, color, stackgroup):
-        fig.add_trace(go.Scatter(
-            x=x, y=y, name=nombre, mode="lines", stackgroup=stackgroup,
-            line=dict(width=2, color=color), fillcolor=hex_a_rgba(color, 0.35),
-            hovertemplate="%{fullData.name}<br>%{x|%b-%Y}: %{y:,.0f}<extra></extra>",
-        ))
-
-    for i, linea in enumerate(evolucion_wide.columns):
-        agregar_serie(evolucion_wide.index, evolucion_wide[linea], f"Otorgado - {linea}", NEON_CALIDO[i % len(NEON_CALIDO)], "otorgado")
-
-    for i, linea in enumerate(horizonte_wide.columns):
-        agregar_serie(horizonte_wide.index, horizonte_wide[linea], f"Vencimiento - {linea}", NEON_FRIO[i % len(NEON_FRIO)], "vencimientos")
-
-    fecha_corte = evolucion_wide.index.max() if len(evolucion_wide) else fecha_hasta
-    fig.add_shape(
-        type="line", xref="x", yref="paper",
-        x0=fecha_corte, x1=fecha_corte, y0=0, y1=1,
-        line=dict(color=BLANCO, dash="dash"),
-    )
-
-    tema_oscuro(fig, height=420,
-        title=dict(text="Otorgamiento mensual vs. horizonte de vencimientos, por línea de crédito"),
-        xaxis=dict(title="Mes", tickformat="%b-%Y"),
-        yaxis=dict(title="Monto", tickformat=",.0f"),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-    )
-    st.plotly_chart(fig, width="stretch")
+        st.markdown(
+            f"""
+            <table style="width:100%; font-size:13px; color:{BLANCO};">
+                <tr><th style="text-align:left; padding:2px 8px;">Vencimiento</th><th style="text-align:left; padding:2px 8px;">Otorgado</th></tr>
+                {filas_html}
+            </table>
+            """,
+            unsafe_allow_html=True,
+        )
 
 with tab_tabla:
     col1, col2 = st.columns(2)
