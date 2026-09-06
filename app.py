@@ -1,3 +1,4 @@
+%%writefile app.py
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
@@ -7,7 +8,7 @@ import streamlit as st
 
 st.set_page_config(page_title="Tablero de gestión crediticia - Masori", layout="wide")
 
-FONDO = "#0D0D0D"
+FONDO = "#22262B"
 NEGRO = "#000000"
 BLANCO = "#FFFFFF"
 NARANJA = "#F97316"
@@ -26,6 +27,7 @@ st.markdown(
     """
     <style>
         hr, div[data-testid="stDivider"] { border-color: #F97316 !important; }
+    .stApp { background-color: #22262B; }
     .stTabs [data-baseweb="tab-list"] {
         display: flex;
         width: 100%;
@@ -51,9 +53,11 @@ st.markdown(
     .stTabs [data-baseweb="tab-border"] { display: none; }
     .stTabs [data-baseweb="tab-highlight"] { display: none; }
           div[data-testid="stMetric"] {
+        background-color: #22262B;
         border: 1px solid #F97316; border-radius: 6px; padding: 6px 8px;
     }
     div[data-testid="stPlotlyChart"] {
+        background-color: #22262B;
         border: 1px solid #F97316; border-radius: 6px; padding: 1px;
     }
     div[data-testid="stDataFrame"] {
@@ -62,6 +66,7 @@ st.markdown(
     label[data-testid="stWidgetLabel"] p { color: #F97316 !important; font-weight: 600; }
     .block-container { padding-top: 0.1rem; padding-bottom: 0.1rem; }
     div[data-testid="stVerticalBlock"] { gap: 0.1rem; }
+    div[data-testid="stHorizontalBlock"] { gap: 0.3rem; }
     h2 { margin-bottom: 0.0rem !important; margin-top: 0 !important; }
     .stTabs [data-baseweb="tab-panel"] { padding-top: 0 !important; }
     div[data-testid="stVerticalBlockBorderWrapper"] { margin-bottom: 0 !important; }
@@ -91,20 +96,38 @@ def tema_oscuro(fig, **kwargs):
         legend=legend_final, separators=",.", margin=dict(l=40, r=20, t=40, b=30),
         **({"title": titulo_kwargs} if titulo_kwargs is not None else {}), **kwargs,
     )
-    fig.update_xaxes(gridcolor="#2B2B2B", zerolinecolor="#2B2B2B", color=BLANCO)
-    fig.update_yaxes(gridcolor="#2B2B2B", zerolinecolor="#2B2B2B", color=BLANCO)
+    fig.update_xaxes(gridcolor="#3A3F45", zerolinecolor="#3A3F45", color=BLANCO)
+    fig.update_yaxes(gridcolor="#3A3F45", zerolinecolor="#3A3F45", color=BLANCO)
     return fig
 
+
+import os
+
+def encontrar_carpeta_data():
+    candidatos = ["data", "../data", "./data"]
+    try:
+        candidatos.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
+    except NameError:
+        pass  # __file__ no existe si se corre como celda de notebook
+    for c in candidatos:
+        if os.path.isdir(c):
+            return c
+    raise FileNotFoundError(
+        "No se encontro la carpeta data/. Verifica que exista al lado de app.py "
+        "o de la celda que estas ejecutando, con los CSV adentro."
+    )
+
+RUTA_DATA = encontrar_carpeta_data()
 
 @st.cache_data
 def cargar_datos():
     d = {}
-    d["credito_detalle"] = pd.read_csv("data/credito_detalle.csv", parse_dates=["Fecha"])
-    d["cuotas_detalle"] = pd.read_csv("data/cuotas_detalle.csv", parse_dates=["Fecha de vencimiento"])
-    d["cobros_detalle"] = pd.read_csv("data/cobros_detalle.csv", parse_dates=["Fecha de cobro"])
-    d["tabla"] = pd.read_csv("data/tabla_clientes.csv")
-    d["evolucion_credito"] = pd.read_csv("data/evolucion_credito.csv", parse_dates=["Mes"])
-    d["horizonte_2029"] = pd.read_csv("data/horizonte_2029.csv", parse_dates=["Mes"])
+    d["credito_detalle"] = pd.read_csv(f"{RUTA_DATA}/credito_detalle.csv", parse_dates=["Fecha"])
+    d["cuotas_detalle"] = pd.read_csv(f"{RUTA_DATA}/cuotas_detalle.csv", parse_dates=["Fecha de vencimiento"])
+    d["cobros_detalle"] = pd.read_csv(f"{RUTA_DATA}/cobros_detalle.csv", parse_dates=["Fecha de cobro"])
+    d["tabla"] = pd.read_csv(f"{RUTA_DATA}/tabla_clientes.csv")
+    d["evolucion_credito"] = pd.read_csv(f"{RUTA_DATA}/evolucion_credito.csv", parse_dates=["Mes"])
+    d["horizonte_2029"] = pd.read_csv(f"{RUTA_DATA}/horizonte_2029.csv", parse_dates=["Mes"])
     return d
 
 
@@ -218,10 +241,9 @@ with tab_monitoreo:
             monto=("Monto", "sum"), cantidad=("Monto", "count")
         ).reset_index().sort_values("monto", ascending=False)
         fig = go.Figure(go.Pie(
-            st.write(concentracion_f)
             labels=concentracion_f["Linea de crédito"], values=concentracion_f["monto"],
             marker=dict(colors=PALETA_CATEGORICA, line=dict(color=FONDO, width=2)),
-            customdata=concentracion_f[["monto", "cantidad"]],
+            customdata=concentracion_f[["monto", "cantidad"]].values,
             opacity=0.75,
             hovertemplate=(
                 "<b>Línea de crédito:</b> %{label}<br>"
