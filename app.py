@@ -70,6 +70,11 @@ st.markdown(
     h2 { margin-bottom: 0.0rem !important; margin-top: 0 !important; }
     .stTabs [data-baseweb="tab-panel"] { padding-top: 0 !important; }
     div[data-testid="stVerticalBlockBorderWrapper"] { margin-bottom: 0 !important; }
+    .st-key-fila_fecha_slider {
+        margin-top: -54px;
+        position: relative;
+        z-index: 5;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -192,12 +197,14 @@ with tab_monitoreo:
     fecha_min, fecha_max = fechas_disponibles.min().date(), fechas_disponibles.max().date()
 
     col_titulo, col_slider = st.columns([3, 2])
-    with col_slider:
-        fecha_desde, fecha_hasta = st.slider(
-            "Rango de fechas",
-            min_value=fecha_min, max_value=fecha_max,
-            value=(fecha_min, fecha_max), format="MMM YYYY",
-        )
+    with st.container(key="fila_fecha_slider"):
+        col_titulo, col_slider = st.columns([3, 2])
+        with col_slider:
+            fecha_desde, fecha_hasta = st.slider(
+                "Rango de fechas",
+                min_value=fecha_min, max_value=fecha_max,
+                value=(fecha_min, fecha_max), format="MMM YYYY",
+            )
     fecha_desde, fecha_hasta = pd.Timestamp(fecha_desde), pd.Timestamp(fecha_hasta)
 
     # --- filtrado del detalle segun el rango elegido ---
