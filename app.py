@@ -350,13 +350,13 @@ with tab_monitoreo:
             agregar_serie(horizonte_wide.index, horizonte_wide[linea], color, "vencimientos")
 
         fecha_corte = evolucion_wide.index.max() if len(evolucion_wide) else fecha_hasta
-        fig.add_shape(
+                fig.add_shape(
             type="line", xref="x", yref="paper",
             x0=fecha_corte, x1=fecha_corte, y0=0, y1=1,
             line=dict(color=BLANCO, dash="dash"),
         )
 
-               etiquetas_txt = "<br>".join(
+        etiquetas_txt = "<br>".join(
             [f'<span style="color:{color}">⬤</span> {linea}' for linea, color in colores_vencimiento.items()]
             + [f'<span style="color:{color}">⬤</span> {linea}' for linea, color in colores_otorgado.items()]
         )
