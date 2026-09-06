@@ -356,6 +356,18 @@ with tab_monitoreo:
             line=dict(color=BLANCO, dash="dash"),
         )
 
+               etiquetas_txt = "<br>".join(
+            [f'<span style="color:{color}">⬤</span> {linea}' for linea, color in colores_vencimiento.items()]
+            + [f'<span style="color:{color}">⬤</span> {linea}' for linea, color in colores_otorgado.items()]
+        )
+
+        fig.add_annotation(
+            xref="paper", yref="paper", x=0.99, y=0.99, xanchor="right", yanchor="top",
+            align="left", showarrow=False, text=etiquetas_txt,
+            font=dict(size=9, color=BLANCO),
+            bgcolor=FONDO, bordercolor=NARANJA, borderwidth=1, borderpad=4,
+        )
+
         tema_oscuro(fig, height=260,
             title=dict(text="Otorgamiento vs. horizonte de vencimientos"),
             xaxis=dict(title="Mes", tickformat="%b-%Y"),
@@ -363,26 +375,6 @@ with tab_monitoreo:
             showlegend=False,
         )
         st.plotly_chart(fig, width="stretch")
-
-        filas_tabla = max(len(colores_vencimiento), len(colores_otorgado))
-        items_venc = list(colores_vencimiento.items())
-        items_otor = list(colores_otorgado.items())
-
-        filas_html = ""
-        for i in range(filas_tabla):
-            venc = f'<span style="color:{items_venc[i][1]}">⬤</span> {items_venc[i][0]}' if i < len(items_venc) else ""
-            otor = f'<span style="color:{items_otor[i][1]}">⬤</span> {items_otor[i][0]}' if i < len(items_otor) else ""
-            filas_html += f"<tr><td style='padding:2px 8px;'>{venc}</td><td style='padding:2px 8px;'>{otor}</td></tr>"
-
-        st.markdown(
-            f"""
-            <table style="width:100%; font-size:13px; color:{BLANCO};">
-                <tr><th style="text-align:left; padding:2px 8px;">Vencimiento</th><th style="text-align:left; padding:2px 8px;">Otorgado</th></tr>
-                {filas_html}
-            </table>
-            """,
-            unsafe_allow_html=True,
-        )
 
 with tab_tabla:
     col1, col2 = st.columns(2)
