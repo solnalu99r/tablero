@@ -218,6 +218,7 @@ with tab_monitoreo:
             monto=("Monto", "sum"), cantidad=("Monto", "count")
         ).reset_index().sort_values("monto", ascending=False)
         fig = go.Figure(go.Pie(
+            st.write(concentracion_f)
             labels=concentracion_f["Linea de crédito"], values=concentracion_f["monto"],
             marker=dict(colors=PALETA_CATEGORICA, line=dict(color=FONDO, width=2)),
             customdata=concentracion_f[["monto", "cantidad"]],
