@@ -1,4 +1,3 @@
-
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
@@ -219,10 +218,7 @@ with tab_monitoreo:
     ]
 
     # --- KPIs recalculados sobre el rango filtrado ---
-    resueltos_f = credito_f[credito_f["Estado"] != "Borrador"]
-    aprobados_f = resueltos_f[resueltos_f["Estado"].isin(ESTADOS_OTORGADOS)]
-    tasa_aprobacion_f = len(aprobados_f) / len(resueltos_f) * 100 if len(resueltos_f) else 0
-
+    rentabilidad_f = (cuotas_f["Interés"].sum() + cuotas_f["Cargo"].sum()) / cuotas_f["Capital"].sum() * 100 if cuotas_f["Capital"].sum() else 0
     monto_cuotas_f = cuotas_f["Cuota - Monto"].sum()
     total_cobrado_f = cobros_f[cobros_f["Estado"] == "Confirmado"]["Monto a cobrar"].sum()
     tasa_cobranza_f = total_cobrado_f / monto_cuotas_f * 100 if monto_cuotas_f else 0
@@ -232,7 +228,7 @@ with tab_monitoreo:
     pct_en_mora_f = (mora_saldo_f[mora_saldo_f.index != "Normal"].sum() / mora_saldo_f.sum() * 100) if mora_saldo_f.sum() else 0
 
     k1, k2, k3, k4, k5, k6 = st.columns([1, 1, 1, 1.5, 1.5, 1.5])
-    k1.metric("Tasa de aprobación", f"{tasa_aprobacion_f:.1f}%")
+    k1.metric("Rentabilidad de cartera", f"{rentabilidad_f:.1f}%")
     k2.metric("Tasa de cobranza", f"{tasa_cobranza_f:.1f}%")
     k3.metric("% de cartera en mora", f"{pct_en_mora_f:.1f}%")
     k4.metric("Monto de cuotas", formato_ars(monto_cuotas_f))
@@ -415,10 +411,10 @@ with tab_definiciones:
     st.markdown('<h2 style="font-size:22px; margin-top:0; margin-bottom:0.2rem;">Indicadores clave de performance</h2>', unsafe_allow_html=True)
 
     indicadores = [
-        {
-            "nombre": "Tasa de aprobación",
-            "descripcion": "Refleja el porcentaje de solicitudes de crédito aprobadas en relación con el total de solicitudes resueltas en el período seleccionado.",
-            "calculo": "(Cantidad de créditos en Acreditado, Pagado, Refinanciado o Pre-cancelado / Cantidad de solicitudes resueltas, excluye Borrador) * 100.",
+      {
+            "nombre": "Rentabilidad de cartera",
+            "descripcion": "Mide el margen (interés más cargo) que se genera sobre el capital efectivamente prestado en las cuotas del período seleccionado.",
+            "calculo": "(Interés + Cargo de las cuotas del período / Capital de las cuotas del período) * 100.",
         },
         {
             "nombre": "Tasa de cobranza",
